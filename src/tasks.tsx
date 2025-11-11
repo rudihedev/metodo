@@ -1,11 +1,17 @@
+const dataTasks = [
+  { id: 1, title: "Breakfast", isDone: false },
+  { id: 2, title: "Lunch", isDone: false },
+  { id: 3, title: "Dinner", isDone: true },
+];
+
 export function Tasks() {
   return (
     <div>
       <h2>Tasks</h2>
       <ul>
-        <TaskItem title="Breakfast" isDone />
-        <TaskItem title="Lunch" />
-        <TaskItem title="Dinner" />
+        {dataTasks.map((task) => (
+          <TaskItem key={task.id} title={task.title} isDone={task.isDone} />
+        ))}
       </ul>
     </div>
   );
