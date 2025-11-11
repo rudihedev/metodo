@@ -1,6 +1,9 @@
-export function Profile() {
-  const imageUrl = "https://i.imgur.com/MK3eW3Am.jpg";
-  const name = "Katherine Johnson";
-
-  return <img src={imageUrl} alt={name} />;
+export function Profile({
+  imageUrl,
+  name,
+}: {
+  imageUrl: string;
+  name: string;
+}) {
+  return <img src={imageUrl} alt={name} width={250} height={300} />;
 }
