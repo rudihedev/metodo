@@ -1,32 +1,34 @@
-const dataTasks = [
-  { id: 1, title: "Breakfast", isDone: false },
+type Task = {
+  id: number;
+  title: string;
+  isDone: boolean;
+};
+
+type Tasks = Task[];
+
+const dataTasks: Tasks = [
+  { id: 1, title: "Breakfast", isDone: true },
   { id: 2, title: "Lunch", isDone: false },
-  { id: 3, title: "Dinner", isDone: true },
+  { id: 3, title: "Dinner", isDone: false },
 ];
 
 export function Tasks() {
   return (
-    <div>
-      <h2>Tasks</h2>
-      <ul>
-        {dataTasks.map((task) => (
-          <TaskItem key={task.id} title={task.title} isDone={task.isDone} />
-        ))}
-      </ul>
-    </div>
+    <ul className="tasks">
+      {dataTasks.map((task) => (
+        <li key={task.id}>
+          <TaskItem task={task} />
+        </li>
+      ))}
+    </ul>
   );
 }
 
-export function TaskItem({
-  title,
-  isDone,
-}: {
-  title: string;
-  isDone?: boolean;
-}) {
-  if (isDone) {
-    return null;
-  }
-
-  return <li>{title}</li>;
+export function TaskItem({ task }: { task: Task }) {
+  return (
+    <section className="task-item">
+      <h2>{task.title}</h2>
+      <p>{task.isDone ? "✅ Done" : "📝 To-Do"}</p>
+    </section>
+  );
 }
