@@ -14,7 +14,7 @@ const dataTasks: Tasks = [
 
 export function Tasks() {
   return (
-    <ul className="tasks">
+    <ul className="flex flex-col gap-4">
       {dataTasks.map((task) => (
         <li key={task.id}>
           <TaskItem task={task} />
@@ -26,8 +26,8 @@ export function Tasks() {
 
 export function TaskItem({ task }: { task: Task }) {
   return (
-    <section className="task-item">
-      <h2>{task.title}</h2>
+    <section className="p-4 bg-green-100 rounded-lg">
+      <h2 className="text-lg font-bold">{task.title}</h2>
       <p>{task.isDone ? "✅ Done" : "📝 To-Do"}</p>
     </section>
   );
