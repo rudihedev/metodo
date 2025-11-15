@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { TrashIcon } from "lucide-react";
-import { EyeIcon } from "lucide-react";
+import { TrashIcon, EyeIcon } from "lucide-react";
 
 type Task = {
   id: number;
