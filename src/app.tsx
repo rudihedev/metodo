@@ -10,7 +10,6 @@ export function App() {
         <h2 className="text-center text-2xl font-bold text-green-700">
           📋 What to Do Today? 🔍
         </h2>
-
         <Tasks />
       </main>
     </div>
