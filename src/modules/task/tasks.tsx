@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { TrashIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -25,14 +27,45 @@ export function Tasks() {
     setTasks(updatedTasks);
   }
 
+  function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const title = formData.get("title")?.toString();
+    if (!title) return null;
+
+    const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+
+    const newTask: Task = {
+      id: newId,
+      title,
+      isDone: false,
+    };
+
+    const updatedTasks = [...tasks, newTask];
+
+    setTasks(updatedTasks);
+  }
+
   return (
-    <ul className="flex flex-col gap-2">
-      {tasks.map((task) => (
-        <li key={task.id}>
-          <TaskItem task={task} handleDelete={() => handleDelete(task.id)} />
-        </li>
-      ))}
-    </ul>
+    <section className="space-y-8">
+      <form method="post" onSubmit={handleCreate} className="space-y-2">
+        <div className="space-y-2">
+          <Label htmlFor="title">Title:</Label>
+          <Input id="title" type="text" name="title" />
+        </div>
+        <Button type="submit">Create To-Do</Button>
+      </form>
+
+      <ul className="flex flex-col gap-2">
+        {tasks.map((task) => (
+          <li key={task.id}>
+            <TaskItem task={task} handleDelete={() => handleDelete(task.id)} />
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -52,7 +85,7 @@ export function TaskItem({
       <div className="flex gap-2">
         <Button size="xs">
           <EyeIcon className="size-3" />
-          <span className="text-xs">View</span>
+          <span>View</span>
         </Button>
 
         <Button size="xs" variant="destructive" onClick={handleDelete}>
