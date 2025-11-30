@@ -86,7 +86,7 @@ export function TaskItem({
   handleDelete,
 }: {
   task: Task;
-  handleDelete: () => void;
+  handleDelete?: () => void;
 }) {
   return (
     <section className="flex justify-between gap-4 rounded-lg bg-green-100 p-4">
@@ -107,10 +107,12 @@ export function TaskItem({
           </Link>
         </Button>
 
-        <Button size="xs" variant="destructive" onClick={handleDelete}>
-          <TrashIcon className="size-3" />
-          <span className="text-xs">Delete</span>
-        </Button>
+        {handleDelete ? (
+          <Button size="xs" variant="destructive" onClick={handleDelete}>
+            <TrashIcon className="size-3" />
+            <span className="text-xs">Delete</span>
+          </Button>
+        ) : null}
       </div>
     </section>
   );
