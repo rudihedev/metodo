@@ -1,12 +1,13 @@
 import { Tasks } from "@/modules/task/tasks";
-import { TimerInterval } from "@/modules/timer/timer-interval";
+import { CounterIncrement } from "@/modules/counter/counter-increment";
 
 export function App() {
   return (
     <div className="flex justify-center">
       <main className="w-full max-w-lg space-y-2">
-        <TimerInterval />
-        <Tasks />
+        <>
+          <Tasks />
+        </>
       </main>
     </div>
   );

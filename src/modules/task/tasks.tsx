@@ -12,6 +12,7 @@ import { toast } from "sonner";
 export function Tasks() {
   const [tasks, setTasks] = useState(() => {
     const storedTasks = localStorage.getItem("tasks");
+
     return storedTasks ? (JSON.parse(storedTasks) as Tasks) : initialDataTasks;
   });
 
