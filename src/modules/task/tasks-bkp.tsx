@@ -2,22 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TrashIcon, EyeIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TaskSchema, type Task, type Tasks } from "@/modules/task/schema";
 import { Link } from "react-router";
-import z from "zod";
 import { initialDataTasks } from "@/modules/task/data";
-import { toast } from "sonner";
 
 export function Tasks() {
-  const [tasks, setTasks] = useState(() => {
-    const storedTasks = localStorage.getItem("tasks");
-    return storedTasks ? (JSON.parse(storedTasks) as Tasks) : initialDataTasks;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+  const [tasks, setTasks] = useState(initialDataTasks);
 
   function handleDelete(id: number) {
     const updatedTasks = tasks.filter((task) => task.id != id);
@@ -26,32 +17,28 @@ export function Tasks() {
   }
 
   function handleCreate(event: React.FormEvent<HTMLFormElement>) {
-    try {
-      event.preventDefault();
+    event.preventDefault();
 
-      const formData = new FormData(event.currentTarget);
+    const formData = new FormData(event.currentTarget);
+    const title = formData.get("title")?.toString();
 
-      const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+    if (!title) return null;
 
-      const newTask = {
-        id: newId,
-        title: formData.get("title")?.toString().trim() || "",
-        description: formData.get("description")?.toString().trim() || "",
-        isDone: false,
-      };
+    const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
 
-      TaskSchema.parse(newTask);
+    const newTask = {
+      id: newId,
+      title: formData.get("title")?.toString().trim() || "",
+      description: formData.get("description")?.toString().trim() || "",
+      isDone: false,
+    };
 
-      const updatedTasks = [...tasks, newTask];
+    TaskSchema.parse(newTask);
 
-      setTasks(updatedTasks);
-      event.currentTarget.reset();
-    } catch (error: unknown) {
-      if (error instanceof z.ZodError) {
-        const messages = error.issues.map((issue) => issue.message).join(", ");
-        toast.error("Task invalid!", { description: messages });
-      }
-    }
+    const updatedTasks = [...tasks, newTask];
+
+    setTasks(updatedTasks);
+    event.currentTarget.reset();
   }
 
   return (
@@ -106,12 +93,12 @@ export function TaskItem({
           </Link>
         </Button>
 
-        {handleDelete && (
+        {handleDelete ? (
           <Button size="xs" variant="destructive" onClick={handleDelete}>
             <TrashIcon className="size-3" />
             <span className="text-xs">Delete</span>
           </Button>
-        )}
+        ) : null}
       </div>
     </section>
   );
