@@ -1,5 +1,4 @@
 import { Tasks } from "@/modules/task/tasks";
-import { CounterIncrement } from "@/modules/counter/counter-increment";
 
 export function App() {
   return (
