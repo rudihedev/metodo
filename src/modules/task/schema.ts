@@ -8,6 +8,7 @@ export const TaskSchema = z.object({
     .max(50, "Too long max. 50 chars."),
   description: z.string().min(1).max(100),
   isDone: z.boolean("isDone is required!"),
+  createdAt: z.string().optional(),
 });
 
 export const TasksSchema = TaskSchema.array();

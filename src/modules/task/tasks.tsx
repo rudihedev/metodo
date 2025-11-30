@@ -39,6 +39,7 @@ export function Tasks() {
         title: formData.get("title")?.toString().trim() || "",
         description: formData.get("description")?.toString().trim() || "",
         isDone: false,
+        createdAt: new Date().toISOString(),
       };
 
       TaskSchema.parse(newTask);
@@ -94,6 +95,15 @@ export function TaskItem({
         <h2 className="text-lg font-bold">{task.title}</h2>
         {task.description && (
           <p className="text-sm text-gray-700">{task.description}</p>
+        )}
+        {task.createdAt && (
+          <p className="text-xs text-gray-400 italic">
+            {new Date(task.createdAt).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
         )}
         <p className="text-xs text-gray-500">
           {task.isDone ? "✅ Done" : "📝 To-Do"}
