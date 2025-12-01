@@ -21,4 +21,4 @@ Should you have any inquiries, kindly contact the above page.
 
 ## Preview
 
-![home](images/preview.png)
+![home](src/images/preview.png)
