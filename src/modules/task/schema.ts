@@ -7,7 +7,7 @@ export const TaskSchema = z.object({
     .min(3, "Too short min. 3 chars!")
     .max(50, "Too long max. 50 chars."),
   description: z.string().min(1).max(100),
-  isDone: z.boolean("isDone is required!"),
+  isDone: z.enum(["todo", "ongoing", "done"]),
   createdAt: z.string().optional(),
 });
 

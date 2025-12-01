@@ -38,7 +38,7 @@ export function Tasks() {
         id: newId,
         title: formData.get("title")?.toString().trim() || "",
         description: formData.get("description")?.toString().trim() || "",
-        isDone: false,
+        isDone: "todo",
         createdAt: new Date().toISOString(),
       };
 
