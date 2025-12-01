@@ -36,7 +36,9 @@ export function TaskId() {
           <p className="text-sm text-gray-700">{task.description}</p>
         )}
         <p className="text-xs text-gray-500">
-          {task.isDone ? "✅ Done" : "📝 To-Do"}
+          {task.isDone === "todo" && "📝 To-Do"}
+          {task.isDone === "ongoing" && "⏳ On-Going"}
+          {task.isDone === "done" && "✅ Done"}
         </p>
       </div>
     </section>
