@@ -18,3 +18,7 @@ App to manage your daily tasks.
 ## Contact
 
 Should you have any inquiries, kindly contact the above page.
+
+## Preview
+
+![home](images/preview.png)
