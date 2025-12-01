@@ -40,7 +40,7 @@ export function Tasks() {
         description: formData.get("description")?.toString().trim() || "",
         isDone: "todo",
         createdAt: new Date().toISOString(),
-      };
+      } as Task;
 
       TaskSchema.parse(newTask);
 
@@ -54,6 +54,14 @@ export function Tasks() {
         toast.error("Task invalid!", { description: messages });
       }
     }
+  }
+
+  function handleStatusChange(id: number, newStatus: Task["isDone"]) {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, isDone: newStatus } : task,
+    );
+
+    setTasks(updatedTasks);
   }
 
   return (
@@ -72,11 +80,32 @@ export function Tasks() {
       </form>
 
       <ul className="flex flex-col gap-2">
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <TaskItem task={task} handleDelete={() => handleDelete(task.id)} />
-          </li>
-        ))}
+        {tasks
+          .slice()
+          .sort((a, b) => {
+            const dateCompare =
+              new Date(b.createdAt ?? 0).getTime() -
+              new Date(a.createdAt ?? 0).getTime();
+            if (dateCompare !== 0) return dateCompare;
+
+            const statusOrder: Record<Task["isDone"], number> = {
+              ongoing: 1,
+              todo: 2,
+              done: 3,
+            };
+            return statusOrder[a.isDone] - statusOrder[b.isDone];
+          })
+          .map((task) => (
+            <li key={task.id}>
+              <TaskItem
+                task={task}
+                handleDelete={() => handleDelete(task.id)}
+                handleStatusChange={(newStatus) =>
+                  handleStatusChange(task.id, newStatus)
+                }
+              />
+            </li>
+          ))}
       </ul>
     </section>
   );
@@ -85,19 +114,25 @@ export function Tasks() {
 export function TaskItem({
   task,
   handleDelete,
+  handleStatusChange,
 }: {
   task: Task;
   handleDelete?: () => void;
+  handleStatusChange?: (newStatus: Task["isDone"]) => void;
 }) {
+  const textClass = task.isDone === "done" ? "line-through text-gray-400" : "";
+
   return (
     <section className="flex justify-between gap-4 rounded-lg bg-green-100 p-4">
       <div>
-        <h2 className="text-lg font-bold">{task.title}</h2>
+        <h2 className={`text-lg font-bold ${textClass}`}>{task.title}</h2>
         {task.description && (
-          <p className="text-sm text-gray-700">{task.description}</p>
+          <p className={`text-sm text-gray-700 ${textClass}`}>
+            {task.description}
+          </p>
         )}
         {task.createdAt && (
-          <p className="text-xs text-gray-400 italic">
+          <p className={`text-xs text-gray-400 italic ${textClass}`}>
             {new Date(task.createdAt).toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
@@ -105,10 +140,20 @@ export function TaskItem({
             })}
           </p>
         )}
-        <p className="text-xs text-gray-500">
-          {task.isDone ? "✅ Done" : "📝 To-Do"}
-        </p>
+
+        <select
+          value={task.isDone}
+          onChange={(e) =>
+            handleStatusChange?.(e.target.value as Task["isDone"])
+          }
+          className="mt-1 w-fit rounded border bg-white px-2 py-1 text-[10px]"
+        >
+          <option value="todo">📝 To-Do</option>
+          <option value="ongoing">⏳ On-Going</option>
+          <option value="done">✅ Done</option>
+        </select>
       </div>
+
       <div className="flex gap-2">
         <Button asChild size="xs">
           <Link to={`/tasks/${task.id}`}>
