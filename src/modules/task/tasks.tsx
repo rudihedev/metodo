@@ -12,8 +12,15 @@ import { toast } from "sonner";
 export function Tasks() {
   const [tasks, setTasks] = useState(() => {
     const storedTasks = localStorage.getItem("tasks");
+    if (!storedTasks) return initialDataTasks;
 
-    return storedTasks ? (JSON.parse(storedTasks) as Tasks) : initialDataTasks;
+    const parsedTasks = JSON.parse(storedTasks) as Tasks;
+
+    const fixedTasks = parsedTasks.map((task) => {
+      return { ...task, createdAt: new Date(task.createdAt) };
+    });
+
+    return fixedTasks;
   });
 
   useEffect(() => {
@@ -38,8 +45,8 @@ export function Tasks() {
         id: newId,
         title: formData.get("title")?.toString().trim() || "",
         description: formData.get("description")?.toString().trim() || "",
-        isDone: "todo",
-        createdAt: new Date().toISOString(),
+        status: "todo",
+        createdAt: new Date(),
       } as Task;
 
       TaskSchema.parse(newTask);
@@ -56,9 +63,9 @@ export function Tasks() {
     }
   }
 
-  function handleStatusChange(id: number, newStatus: Task["isDone"]) {
+  function handleStatusChange(id: number, newStatus: Task["status"]) {
     const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, isDone: newStatus } : task,
+      task.id === id ? { ...task, status: newStatus } : task,
     );
 
     setTasks(updatedTasks);
@@ -88,12 +95,12 @@ export function Tasks() {
               new Date(a.createdAt ?? 0).getTime();
             if (dateCompare !== 0) return dateCompare;
 
-            const statusOrder: Record<Task["isDone"], number> = {
+            const statusOrder: Record<Task["status"], number> = {
               ongoing: 1,
               todo: 2,
               done: 3,
             };
-            return statusOrder[a.isDone] - statusOrder[b.isDone];
+            return statusOrder[a.status] - statusOrder[b.status];
           })
           .map((task) => (
             <li key={task.id}>
@@ -118,9 +125,9 @@ export function TaskItem({
 }: {
   task: Task;
   handleDelete?: () => void;
-  handleStatusChange?: (newStatus: Task["isDone"]) => void;
+  handleStatusChange?: (newStatus: Task["status"]) => void;
 }) {
-  const textClass = task.isDone === "done" ? "line-through text-gray-400" : "";
+  const textClass = task.status === "done" ? "line-through text-gray-400" : "";
 
   return (
     <section className="flex justify-between gap-4 rounded-lg bg-green-100 p-4">
@@ -142,9 +149,9 @@ export function TaskItem({
         )}
 
         <select
-          value={task.isDone}
+          value={task.status}
           onChange={(e) =>
-            handleStatusChange?.(e.target.value as Task["isDone"])
+            handleStatusChange?.(e.target.value as Task["status"])
           }
           className="mt-1 w-fit rounded border bg-white px-2 py-1 text-[10px]"
         >
